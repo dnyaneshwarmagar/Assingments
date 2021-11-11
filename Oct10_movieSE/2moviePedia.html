@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MoviePedia</title>
+
+<style>
+    *{
+        justify-content: center;
+        text-align: center;
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+    }
+    #input , #displayDiv{
+        align-content: center;
+        padding: 20px;
+        margin: 0 auto;
+        text-align: center;
+        margin-top: 30px;
+        margin-bottom: 40px;
+        background-color: plum;
+        font-size: 20px;
+        border-radius: 20px;
+        
+    }
+</style>    
+</head>
+<body>
+    <h1>MoviePedia</h1>
+    <h3>MoviePedia will help you to Get all the information about movies you are interested, just by using simple name search. </h3>
+    <div id="input">
+        <input type="text" id="searchbox" />
+        <button onclick="searchMovie()">Search Movie</button>
+    </div>
+    <div id="displayDiv"></div>
+</body>
+</html>
+<script>
+    async function searchMovie(){
+        let moviename = document.getElementById("searchbox").value;
+
+        let res = await fetch(`https://www.omdbapi.com/?apikey=7bc18e4c&t=${moviename}`);
+
+        let data = await res.json();
+        console.log(data, data.Response)
+
+        if(data.Response== "True" ){
+         showMovieInfo(data);
+        }
+        else if(data.Response == "False"){
+            showError();
+        }   
+    }
+
+    function showMovieInfo(movie){
+
+        displayDiv.innerHTML = null;
+
+        let div = document.createElement("div");
+
+        let img = document.createElement("img");
+        img.src =  movie.Poster;
+
+        let title = document.createElement("p");
+        title.textContent = "Title:  " + movie.Title;
+        
+        let releaseYear = document.createElement("p");
+        releaseYear.textContent = "Released in:  " +movie.Year;
+
+        let rating = document.createElement("p");
+        rating.textContent = "Rating:  " +movie.Ratings[0].Value;
+
+        let genre = document.createElement("p");
+        genre.textContent = "Genre:  "+ movie.Genre;
+
+        div.append(img, title, releaseYear, rating, genre);
+        displayDiv.append(div);
+    }
+
+    function showError(){
+        displayDiv.innerHTML = null;
+
+        let imgDiv = document.createElement("div");
+        let img1 = document.createElement("img");
+        img1.src = "https://www.myphukettravel.com/assets/front-end/images/404.gif";
+        
+        imgDiv.append(img1);
+        displayDiv.append(imgDiv);
+        
+    }
+</script>
