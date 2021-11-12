@@ -72,6 +72,21 @@
         movies.forEach(function(movie){
             let p = document.createElement("p");
             p.innerText = movie.Title;
+            
+            p.addEventListener("mouseover", func) 
+            p.addEventListener("mouseout", func1) 
+
+            function func()
+            {
+            p.setAttribute("style", "background-color:blue;")
+            }
+
+            function func1()
+            {  
+            p.setAttribute("style", "background-color:lightblue;")
+            }
+
+
             movies_div.append(p);
         });
     }
