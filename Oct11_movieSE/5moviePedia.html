@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MovieSearchEngine</title>
+    <style>
+       
+        body{
+            text-align: center;
+            background-color: #F8BBD0;
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+        }
+        h1{
+            text-align: center;
+            font-size: 50px;
+        }
+        #searchbox, h3{
+            text-align: center;
+            justify-self: center;
+        }
+
+        input{
+            width: 60%;
+            height: 30px;
+            border: lightslategray solid 1px;
+        }
+        #movies{
+            text-align:start;
+            height: 200px;
+            width: 60%;
+            border:1px solid black;
+            overflow:scroll;
+            border-top: none;
+            margin: auto;
+        }
+        #reqResult{
+            text-align: left;
+            margin-top: 50px;
+            display: flex;
+            justify-content: center;
+            background-color: #C2185B;
+        }
+        #reqResult> div:nth-child(1){
+            text-align: justify;
+            padding: 2%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+                       
+        }
+        .image{
+            width: 500px;
+            margin:0 auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>MoviePedia</h1>
+    <h3>MoviePedia will help you to Get all the information about movies you are interested, just by using simple name search. </h3>
+    <div id="searchbox" >
+        <input oninput="debounce(main,2000)" id="movie" type="text" placeholder="Enter movie name" />
+        <div id="movies"></div> 
+    </div>
+    <div id="reqResult"></div>
+    <div id="allResult"></div>
+</body>
+</html>
+<script>
+    var timerId;
+    
+    let movies_div = document.getElementById("movies");
+
+    async function searchMovies(movie_name){
+        try{
+            let res = await fetch(`https://www.omdbapi.com/?apikey=7bc18e4c&s=${movie_name}`);
+            
+            let data = await res.json();
+            console.log("data:",data)
+            
+            return data;
+        }
+        catch(e){
+            
+            console.log("e:", e);
+        }
+    }
+
+    function appendMovies(movies){
+        
+        if(movies === undefined){
+        
+            return false;
+        }
+        movies_div.innerHTML = null;
+        allResult.innerHTML = null;
+
+        movies.forEach(function(movie){
+            let p = document.createElement("p");
+            p.innerText = movie.Title;
+            p.addEventListener("mouseover", func) 
+            p.addEventListener("mouseout", func1) 
+
+            function func()
+            {
+            p.setAttribute("style", "background-color:lightblue;");
+            }
+
+            function func1()
+            {  
+            p.setAttribute("style", "background-color:#F8BBD0;")
+            }
+
+            p.onclick = function(){
+             redirect(p)
+            }
+ 
+
+
+            
+            movies_div.append(p);
+        });
+    }
+
+    async function main(){
+        let name = document.getElementById("movie").value;
+
+        if(name.length < 3){
+            return false;
+        }
+
+        let res = await searchMovies(name);
+
+        let movies_data = res.Search;
+        
+        if(res.Response=="True"){
+
+            appendMovies(movies_data);
+        }
+        else if(res.Response == "False"){
+            showError(res.Error)
+        }
+        
+        
+        console.log("res:", res);
+    }
+
+    function debounce(func, delay){
+
+        if(timerId){
+            clearTimeout(timerId)
+        }
+        timerId= setTimeout(function (){
+            func();
+        },delay)
+    }
+
+    function showError(e){
+        movies_div.innerHTML = null;
+        
+        let p= document.createElement("p");
+        p.innerText = e;
+
+        let errorImg = document.createElement("img");
+        errorImg.src = "https://www.myphukettravel.com/assets/front-end/images/404.gif";
+         
+        let div1 = document.createElement("div");
+
+        div1.append(p,errorImg);
+        allResult.appendChild(div1);
+    }
+
+
+
+    async function redirect(p){
+
+        let res1 = await fetch(`https://www.omdbapi.com/?apikey=7bc18e4c&t=${p.textContent}`)
+
+        let data1 =  await res1.json()
+        showInfo(data1)
+            console.log("data1",data1)
+    }
+
+    let reqResult = document.getElementById("reqResult");
+
+    function showInfo(movie){
+        reqResult.innerHTML=null;
+        allResult.innerHTML=null;
+              console.log("movie",movie)
+        let cont = document.createElement("div")
+        
+
+        let name =document.createElement("h2")
+        name.textContent = "Title : "+movie.Title
+
+        let poster = document.createElement("img")
+        poster.src = movie.Poster
+        poster.setAttribute("class","image")
+
+        let Released = document.createElement("p")
+        Released.textContent = "Released :  "+movie.Released
+
+        let actors  = document.createElement("p")
+        actors.textContent = "Actors :  "+movie.Actors
+
+        let genre = document.createElement("p")
+        genre.textContent = "Genre : "+movie.Genre
+
+        let rating = document.createElement("p")
+        rating.textContent = "imdb rating : " + movie.imdbRating
+
+        let plot = document.createElement("p")
+        plot.textContent= "Plot : "+ movie.Plot
+
+        cont.append(poster,name,plot,Released,actors,genre,rating)
+        reqResult.append(cont)
+               
+    }
+</script>
