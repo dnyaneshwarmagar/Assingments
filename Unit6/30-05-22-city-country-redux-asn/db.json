@@ -1,5 +1,5 @@
 {
-  "user": [
+  "users": [
     {
       "name": "Adam",
       "address": "London",
@@ -8,18 +8,33 @@
       "id": 1
     },
     {
-      "name": "Maddy",
+      "name": "Maddy RHTDM",
       "address": "Newyork",
       "email": "maddy@gmail.com",
       "contact": "242424",
       "id": 2
     },
     {
-      "name": "Sam",
-      "address": "London",
-      "email": "sam@gmail.com",
-      "contact": "262626",
+      "name": "Adam",
+      "email": "param@gmail.com",
+      "contact": "1818181818",
+      "address": "Sarvavyapi",
       "id": 3
+    },
+    {
+      "name": "vi",
+      "email": "vi@gmail.com",
+      "contact": "3232323232",
+      "address": "INDIA",
+      "id": 4
+    },
+    {
+      "name": "dj",
+      "email": "dj@gmail.com",
+      "contact": "4444444444",
+      "address": "donns",
+      "id": 5
     }
-  ]
+  ],
+  "names": ["Adam", "param", "vi", "dj"]
 }
